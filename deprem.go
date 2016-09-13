@@ -1,11 +1,3 @@
-/* SON DEPREMLER BİLGİSİ
-BOĞAZİÇİ ÜNİVERSİTESİ KANDİLLİ RASATHANESİ VE DEPREM ARAŞTIRMA ENSTİTÜSÜ (KRDAE)
-BÖLGESEL DEPREM-TSUNAMİ İZLEME VE DEĞERLENDİRME MERKEZİ (BDTİM) 'nin
-http://www.koeri.boun.edu.tr/scripts/lst0.asp adresinde yayınladığı deprem
-bilgilerinin HTML olarak çekilmesi ve REGEX KULLANMADAN çözümlenmesi
-İlk aşamada amaç sadece çözümlemek olduğu için strin olarak kullanılmıştır.
-*/
-
 package main
 
 import (
@@ -34,12 +26,9 @@ func main() {
   adres:="http://www.koeri.boun.edu.tr/scripts/lst0.asp"
   kod := kod_oku(adres)
   INDEX= baslangic_indexi(kod)
-  satir := satir_oku(kod)
-  depremler[0] = deprem_cozumle(satir)
-  deprem_cozumle(satir)
-  for sayi:=0; sayi < SAYI-1 ; sayi++ {
+  for sayi:=0; sayi < SAYI ; sayi++ {
     yeni_satir:= satir_oku(kod)
-    depremler[sayi+1] = deprem_cozumle(yeni_satir)
+    depremler[sayi] = deprem_cozumle(yeni_satir)
   }
   for k:=0; k<SAYI; k++ {
     fmt.Printf("%s bölgesinde %s şiddetinde deprem oldu.\n",depremler[k].yer,
@@ -101,5 +90,8 @@ func deprem_cozumle(metin string)(deprem){
   yeni.ml = dizi[6]
   yeni.mw = dizi[7]
   yeni.yer = dizi[8]
+  if string(dizi[9][0]) == "(" {
+    yeni.yer += " " + dizi[9]
+  }
   return yeni
 }
